@@ -1,49 +1,39 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import { invoke } from "@tauri-apps/api/core";
-import "./App.css";
+import "./App.scss";
+import Status from "./componenst/Status/Status.tsx";
+import {useEffect, useState} from "react";
+import {invoke} from "@tauri-apps/api/core";
+import {listen} from "@tauri-apps/api/event";
+interface SystemStatus {
+    cpuUsage: number,
+    ramUsage: number,
+    ramTotal: number
+}
 
 function App() {
-  const [greetMsg, setGreetMsg] = useState("");
-  const [name, setName] = useState("");
-
-  async function greet() {
-    // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
-    setGreetMsg(await invoke("greet", { name }));
-  }
-
+    async function UpdateStatus(){
+        setTimeout(async () =>{
+            await invoke("get_status").then((response) => {
+                setSystem(response as SystemStatus)
+            })
+        })
+    }
+    const [system, setSystem] = useState<SystemStatus>({
+        cpuUsage:0,
+        ramUsage:0,
+        ramTotal:0
+    })
+    useEffect(() => {
+        setTimeout(async () =>UpdateStatus(), 2000)
+    }, []);
   return (
     <main className="container">
-      <h1>Welcome to Tauri + React</h1>
-
-      <div className="row">
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo vite" alt="Vite logo" />
-        </a>
-        <a href="https://tauri.app" target="_blank">
-          <img src="/tauri.svg" className="logo tauri" alt="Tauri logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <p>Click on the Tauri, Vite, and React logos to learn more.</p>
-
-      <form
-        className="row"
-        onSubmit={(e) => {
-          e.preventDefault();
-          greet();
-        }}
-      >
-        <input
-          id="greet-input"
-          onChange={(e) => setName(e.currentTarget.value)}
-          placeholder="Enter a name..."
-        />
-        <button type="submit">Greet</button>
-      </form>
-      <p>{greetMsg}</p>
+        <span id="test"></span>
+        <Status name={"CPU"} value={system.cpuUsage}/>
+        <button content={"123"} onClick={() => {
+            setTimeout(async () => {
+            await invoke("get_status");
+        }, 1000);
+        }} />
     </main>
   );
 }

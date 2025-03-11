@@ -1,0 +1,10 @@
+@use '../../vars';
+
+.container{
+  background-color: vars.$light-color-bg;
+  color: vars.$light-color-text;
+  display:flex;
+  justify-content: center;
+  gap: vars.$spacing-lg;
+
+}
