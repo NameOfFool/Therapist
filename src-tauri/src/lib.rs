@@ -1,7 +1,6 @@
-use std::{thread, time};
+use sysinfo::{CpuRefreshKind, MemoryRefreshKind, RefreshKind, System};
 use serde::Serialize;
-use tauri::{AppHandle, Emitter, Manager};
-// Learn more about Tauri commands at https://tauri.app/develop/calling-rust
+use tauri::{Manager};
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
@@ -15,18 +14,26 @@ pub fn run() {
 #[serde(rename_all = "camelCase")]
 struct SystemStatus {
     cpu_usage: f32,
-    ram_usage: f32,
-    ram_total: f32,
+    ram_usage: u64,
+    ram_total: u64,
 }
 #[tauri::command(rename_all = "snake_case")]
 fn get_status() -> SystemStatus {
-    let cpu_usage = 52.2;
-    let ram_usage = 4.2;
-    let ram_total = 8.0;
-    println!("status event called");
+    let mut sys = System::new_with_specifics(
+        RefreshKind::nothing().with_cpu(CpuRefreshKind::everything()).with_memory(MemoryRefreshKind::everything())
+    );
+    std::thread::sleep(sysinfo::MINIMUM_CPU_UPDATE_INTERVAL);
+    sys.refresh_cpu_all();
+
+    let cpu_usage = sys.global_cpu_usage();
+    let ram_usage = sys.used_memory();
+    let ram_total = sys.total_memory();
+
     let result = SystemStatus{cpu_usage, ram_usage, ram_total};
     result.into()
 }
+//TODO Add System module
+
 /*
 pub fn get_port(){
     let mut port = serialport::new("COM3", 9600).timeout(Duration::from_millis(1)).open().expect("Failed to open port");

@@ -2,7 +2,6 @@ import "./App.scss";
 import Status from "./componenst/Status/Status.tsx";
 import {useEffect, useState} from "react";
 import {invoke} from "@tauri-apps/api/core";
-import {listen} from "@tauri-apps/api/event";
 interface SystemStatus {
     cpuUsage: number,
     ramUsage: number,
@@ -23,17 +22,12 @@ function App() {
         ramTotal:0
     })
     useEffect(() => {
-        setTimeout(async () =>UpdateStatus(), 2000)
+        setInterval(async () =>UpdateStatus(), 2000)
     }, []);
   return (
     <main className="container">
-        <span id="test"></span>
-        <Status name={"CPU"} value={system.cpuUsage}/>
-        <button content={"123"} onClick={() => {
-            setTimeout(async () => {
-            await invoke("get_status");
-        }, 1000);
-        }} />
+        <Status name={"CPU"} value={Math.round(system.cpuUsage)}/>
+        <Status name={"RAM"} value={Math.round(100.0 * system.ramUsage/system.ramTotal)}/>
     </main>
   );
 }
