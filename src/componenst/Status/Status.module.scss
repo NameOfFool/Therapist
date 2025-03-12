@@ -4,7 +4,12 @@
   background-color: vars.$light-color-bg;
   color: vars.$light-color-text;
   display:flex;
-  justify-content: center;
+  justify-content: space-between;
   gap: vars.$spacing-lg;
+  &__name{
 
+  }
+  &__bar{
+    background-color: black;
+  }
 }

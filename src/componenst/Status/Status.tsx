@@ -8,9 +8,9 @@ interface Props{
 export default function Status({name, value}:Props){
     return(
         <div className={styles.container}>
-            <span>{name}:</span>
-            <ProgressBar value={value} max={100} />
-            <span>{value}%</span>
+            <span className={styles.container__name}>{name}:</span>
+            <ProgressBar className={styles.container__bar} value={value} max={100} />
+            <span className={styles.container__percent}>{value}%</span>
         </div>
     )
 }

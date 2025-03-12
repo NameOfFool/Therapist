@@ -1,6 +1,8 @@
+use std::time::Duration;
 use sysinfo::{CpuRefreshKind, MemoryRefreshKind, RefreshKind, System};
 use serde::Serialize;
 use tauri::{Manager};
+use machine_info::GraphicsUsage;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
@@ -28,19 +30,25 @@ fn get_status() -> SystemStatus {
     let cpu_usage = sys.global_cpu_usage();
     let ram_usage = sys.used_memory();
     let ram_total = sys.total_memory();
+    let gpu_usage = GraphicsUsage;
+    println!("GPU usage: {}", gpu_usage);
 
+    println!("{}", serialport::available_ports().unwrap().len());
+    //send_to_port(cpu_usage, ram_usage, ram_total);
     let result = SystemStatus{cpu_usage, ram_usage, ram_total};
     result.into()
 }
 //TODO Add System module
 
-/*
-pub fn get_port(){
-    let mut port = serialport::new("COM3", 9600).timeout(Duration::from_millis(1)).open().expect("Failed to open port");
-    loop {
-        let s = &port.write("100,10.4,16.2;".as_bytes()).expect("Write failed");
-        sleep(Duration::from_millis(1000));
-        println!("{s}");
-    }
+
+pub fn send_to_port(cpu_usage: f32,ram_usage:u64, ram_total: u64) {
+    let mut port = serialport::new("COM3", 9600).open().expect("failed to open COM3");
+    let cpu_usage = cpu_usage.round();
+    let ram_usage = bytes_to_gigabytes(ram_usage).round();
+    let ram_total = bytes_to_gigabytes(ram_total).round();
+    &port.write(format!("{cpu_usage},{ram_usage},{ram_total};").as_bytes());
+       // let s = &port.write("100,10.4,16.2;".as_bytes()).expect("Write failed");
 }
-*/
+fn bytes_to_gigabytes(bytes: u64) -> f32 {
+    bytes as f32/ 1024f32.powi(3)
+}

@@ -1,4 +1,4 @@
-import "./App.scss";
+import styles from "./App.module.scss";
 import Status from "./componenst/Status/Status.tsx";
 import {useEffect, useState} from "react";
 import {invoke} from "@tauri-apps/api/core";
@@ -25,9 +25,10 @@ function App() {
         setInterval(async () =>UpdateStatus(), 2000)
     }, []);
   return (
-    <main className="container">
+    <main className={styles.container}>
         <Status name={"CPU"} value={Math.round(system.cpuUsage)}/>
-        <Status name={"RAM"} value={Math.round(100.0 * system.ramUsage/system.ramTotal)}/>
+        <Status name={"RAM"} value={
+            system.ramTotal==0?0:Math.round(100.0 * system.ramUsage/system.ramTotal)}/>
     </main>
   );
 }
