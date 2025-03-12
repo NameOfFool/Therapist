@@ -3,6 +3,25 @@
 .container{
   margin: 0 vars.$spacing-lg;
   display:flex;
+  font-family: 'Rubik';
   flex-direction: column;
-  gap: vars.$spacing-md;
+
+  &__stats{
+    display: flex;
+    flex-direction: column;
+    gap: vars.$spacing-md;
+  }
+}
+@font-face {
+  font-family: 'Rubik';
+  src: local('Rubik'),
+  url('./fonts/Rubik/Rubik-Regular.ttf') format('truetype');
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: 'Rubik';
+  src: local('Rubik'),
+  url('./fonts/Rubik/Rubik-Bold.ttf') format('truetype');
+  font-weight: bold;
 }

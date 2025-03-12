@@ -26,9 +26,12 @@ function App() {
     }, []);
   return (
     <main className={styles.container}>
+        <h1>Overview</h1>
+        <div className={styles.container__stats}>
         <Status name={"CPU"} value={Math.round(system.cpuUsage)}/>
         <Status name={"RAM"} value={
             system.ramTotal==0?0:Math.round(100.0 * system.ramUsage/system.ramTotal)}/>
+        </div>
     </main>
   );
 }

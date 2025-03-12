@@ -59,8 +59,6 @@ pub async fn send_to_port(cpu_usage: f32, ram_usage: u64, ram_total: u64, port:&
     let ram_usage = round::ceil(bytes_to_gigabytes(ram_usage), 1);
     let ram_total = round::ceil(bytes_to_gigabytes(ram_total), 1);
     let s = &port.write(format!("{cpu_usage},{ram_usage},{ram_total};").as_bytes()).expect("Write failed");
-    sleep(Duration::from_millis(1000)).await;
-    println!("{s}");
 }
 fn bytes_to_gigabytes(bytes: u64) -> f64 {
     bytes as f64 / 1024f32.powi(3) as f64

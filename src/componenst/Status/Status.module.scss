@@ -5,11 +5,15 @@
   color: vars.$light-color-text;
   display:flex;
   justify-content: space-between;
+  text-align: center;
   gap: vars.$spacing-lg;
   &__name{
-
+    flex:1;
   }
   &__bar{
-    background-color: black;
+    flex:5;
+  }
+  &__percent{
+    flex:1;
   }
 }
