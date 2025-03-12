@@ -1,8 +1,12 @@
+use machine_info;
+use math::round;
+use serde::Serialize;
+use serialport::SerialPort;
+use std::thread;
 use std::time::Duration;
 use sysinfo::{CpuRefreshKind, MemoryRefreshKind, RefreshKind, System};
-use serde::Serialize;
-use tauri::{Manager};
-use machine_info::GraphicsUsage;
+use tauri::{AppHandle, Emitter, Manager};
+use tokio::time::sleep;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
@@ -20,35 +24,44 @@ struct SystemStatus {
     ram_total: u64,
 }
 #[tauri::command(rename_all = "snake_case")]
-fn get_status() -> SystemStatus {
+fn get_status(app: AppHandle) {
     let mut sys = System::new_with_specifics(
-        RefreshKind::nothing().with_cpu(CpuRefreshKind::everything()).with_memory(MemoryRefreshKind::everything())
+        RefreshKind::nothing()
+            .with_cpu(CpuRefreshKind::everything())
+            .with_memory(MemoryRefreshKind::everything()),
     );
-    std::thread::sleep(sysinfo::MINIMUM_CPU_UPDATE_INTERVAL);
-    sys.refresh_cpu_all();
-
-    let cpu_usage = sys.global_cpu_usage();
-    let ram_usage = sys.used_memory();
-    let ram_total = sys.total_memory();
-    let gpu_usage = GraphicsUsage;
-    println!("GPU usage: {}", gpu_usage);
-
-    println!("{}", serialport::available_ports().unwrap().len());
-    //send_to_port(cpu_usage, ram_usage, ram_total);
-    let result = SystemStatus{cpu_usage, ram_usage, ram_total};
-    result.into()
+    thread::sleep(sysinfo::MINIMUM_CPU_UPDATE_INTERVAL);
+    tauri::async_runtime::spawn(async move {
+        let mut port:Box<dyn SerialPort> = serialport::new("COM3", 9600)
+            .timeout(Duration::from_millis(10))
+            .open()
+            .expect("Failed to open port");
+        loop{
+            sys.refresh_all();
+            let cpu_usage = sys.global_cpu_usage();
+            let ram_usage = sys.used_memory();
+            let ram_total = sys.total_memory();
+            let result = SystemStatus {
+                cpu_usage,
+                ram_usage,
+                ram_total,
+            };
+            send_to_port(cpu_usage, ram_usage,ram_total, &mut port).await;
+            app.emit("status", result).ok();
+            sleep(Duration::from_millis(1000)).await;
+        }
+    });
 }
 //TODO Add System module
 
-
-pub fn send_to_port(cpu_usage: f32,ram_usage:u64, ram_total: u64) {
-    let mut port = serialport::new("COM3", 9600).open().expect("failed to open COM3");
+pub async fn send_to_port(cpu_usage: f32, ram_usage: u64, ram_total: u64, port:&mut Box<dyn SerialPort>) {
     let cpu_usage = cpu_usage.round();
-    let ram_usage = bytes_to_gigabytes(ram_usage).round();
-    let ram_total = bytes_to_gigabytes(ram_total).round();
-    &port.write(format!("{cpu_usage},{ram_usage},{ram_total};").as_bytes());
-       // let s = &port.write("100,10.4,16.2;".as_bytes()).expect("Write failed");
+    let ram_usage = round::ceil(bytes_to_gigabytes(ram_usage), 1);
+    let ram_total = round::ceil(bytes_to_gigabytes(ram_total), 1);
+    let s = &port.write(format!("{cpu_usage},{ram_usage},{ram_total};").as_bytes()).expect("Write failed");
+    sleep(Duration::from_millis(1000)).await;
+    println!("{s}");
 }
-fn bytes_to_gigabytes(bytes: u64) -> f32 {
-    bytes as f32/ 1024f32.powi(3)
+fn bytes_to_gigabytes(bytes: u64) -> f64 {
+    bytes as f64 / 1024f32.powi(3) as f64
 }
