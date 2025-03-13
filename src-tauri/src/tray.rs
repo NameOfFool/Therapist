@@ -1,8 +1,6 @@
 #![cfg(all(desktop, not(test)))]
 
-use std::sync::atomic::{AtomicBool, Ordering};
 use tauri::{
-    include_image,
     menu::{Menu, MenuItem},
     tray::{MouseButton, MouseButtonState, TrayIconBuilder, TrayIconEvent},
     Manager, Runtime, WebviewUrl,
@@ -18,13 +16,6 @@ pub fn create_tray<R: Runtime>(app: &tauri::AppHandle<R>) -> tauri::Result<()> {
             &quit_i,
         ],
     )?;
-    let menu2 = Menu::with_items(
-        app,
-        &[ &open_window_i, &quit_i],
-    )?;
-
-    let is_menu1 = AtomicBool::new(true);
-
     let _ = TrayIconBuilder::with_id("tray-1")
         .tooltip("Tauri")
         .icon(app.default_window_icon().unwrap().clone())
@@ -36,8 +27,8 @@ pub fn create_tray<R: Runtime>(app: &tauri::AppHandle<R>) -> tauri::Result<()> {
             }
             "open-window" => {
                 let _webview =
-                    tauri::WebviewWindowBuilder::new(app, "new", WebviewUrl::App("index.html".into()))
-                        .title("Tauri")
+                    tauri::WebviewWindowBuilder::new(app, "main", WebviewUrl::App("index.html".into()))
+                        .title("Therapits")
                         .build()
                         .unwrap();
             }

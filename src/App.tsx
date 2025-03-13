@@ -1,7 +1,6 @@
 import styles from "./App.module.scss";
 import Status from "./componenst/Status/Status.tsx";
 import {useEffect, useState} from "react";
-import {invoke} from "@tauri-apps/api/core";
 import {listen} from "@tauri-apps/api/event";
 interface SystemStatus {
     cpuUsage: number,
@@ -11,7 +10,6 @@ interface SystemStatus {
 
 function App() {
     async function UpdateStatus(){
-        await invoke("get_status")
         listen("status", (event) =>{
             setSystem(event.payload as SystemStatus)
         })
@@ -22,11 +20,13 @@ function App() {
         ramTotal:0
     })
     useEffect(() => {
-        UpdateStatus()
+        UpdateStatus().then( () => "listen begun")
     }, []);
   return (
     <main className={styles.container}>
-        <h1>Overview</h1>
+        <div>
+            <h1>Overview</h1>
+        </div>
         <div className={styles.container__stats}>
         <Status name={"CPU"} value={Math.round(system.cpuUsage)}/>
         <Status name={"RAM"} value={

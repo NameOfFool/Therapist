@@ -1,6 +1,3 @@
-// Copyright 2019-2024 Tauri Programme within The Commons Conservancy
-// SPDX-License-Identifier: Apache-2.0
-// SPDX-License-Identifier: MIT
 #![cfg(all(desktop, not(test)))]
 
 use tauri::{
@@ -11,7 +8,7 @@ use tauri::{
 
 #[cfg(not(target_os = "macos"))]
 #[command]
-pub fn toggle<R: tauri::Runtime>(window: tauri::Window<R>) {
+pub fn toggle<R: Runtime>(window: tauri::Window<R>) {
     if window.is_menu_visible().unwrap_or_default() {
         let _ = window.hide_menu();
     } else {
@@ -35,7 +32,7 @@ pub fn toggle<R: tauri::Runtime>(
 }
 
 #[command]
-pub fn popup<R: tauri::Runtime>(
+pub fn popup<R: Runtime>(
     window: tauri::Window<R>,
     popup_menu: tauri::State<'_, crate::PopupMenu<R>>,
 ) {
