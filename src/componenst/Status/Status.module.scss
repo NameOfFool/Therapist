@@ -7,11 +7,8 @@
   justify-content: space-between;
   text-align: center;
   gap: vars.$spacing-lg;
-  &__name{
-    flex:1;
-  }
   &__bar{
-    flex:5;
+    flex:10;
   }
   &__percent{
     flex:1;

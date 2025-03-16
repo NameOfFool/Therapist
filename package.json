@@ -10,10 +10,17 @@
     "tauri": "tauri"
   },
   "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@mui/material": "^6.4.7",
+    "@mui/system": "^6.4.7",
+    "@mui/x-charts": "^7.27.1",
     "@tauri-apps/api": "^2",
     "@tauri-apps/plugin-opener": "^2",
     "@util-hooks/use-tauri-event": "^1.0.0",
+    "apexcharts": "^4.5.0",
     "react": "^18.3.1",
+    "react-apexcharts": "^1.7.0",
     "react-dom": "^18.3.1",
     "sass": "^1.85.1",
     "scss": "^0.2.4"
