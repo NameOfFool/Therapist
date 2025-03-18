@@ -1,9 +1,8 @@
 import styles from "./App.module.scss";
-import Status from "./componenst/Status/Status.tsx";
 import {useEffect, useState} from "react";
 import {listen} from "@tauri-apps/api/event";
 import ApexCharts, {ApexOptions} from "apexcharts";
-import ReactApexChart from "react-apexcharts";
+import Status from "./componenst/Status/Status.tsx";
 interface SystemStatus {
     cpuUsage: number,
     ramUsage: number,
@@ -41,7 +40,7 @@ function App() {
             data: [...ramData]
         }])
     }, [system])
-    const [state, setState] =  useState({
+    const [state] =  useState({
 
         cpuSeries: [{
             name:'CPU',
@@ -143,6 +142,9 @@ function App() {
             },
         }
     });
+    function bytesToGB(bytes:number){
+        return bytes/Math.pow(1024,3)
+    }
 
 
 
@@ -152,10 +154,10 @@ function App() {
             <h1>Overview</h1>
         </div>
         <div className={styles.container__stats} id="cpu">
-            <ReactApexChart options={state.cpuOptions as ApexOptions} series={state.cpuSeries} type="line" height={350} />
+            <Status options={state.cpuOptions as ApexOptions} series={state.cpuSeries} data={Math.round(system.cpuUsage)+'%'}/>
         </div>
         <div className={styles.container__stats} id="ram">
-            <ReactApexChart options={state.ramOptions as ApexOptions} series={state.ramSeries} type="line" height={350} />
+            <Status options={state.ramOptions as ApexOptions} series={state.ramSeries} data={`${bytesToGB(system.ramUsage).toFixed(2)}/${bytesToGB(system.ramTotal).toFixed(2)} GB`} />
         </div>
     </main>
   );
