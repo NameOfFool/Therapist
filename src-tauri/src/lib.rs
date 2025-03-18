@@ -47,7 +47,12 @@ struct SystemStatus {
     ram_total: u64,
 }
 #[tauri::command(rename_all = "snake_case")]
-fn get_status(app: AppHandle) {
+fn get_available_ports(){
+    let ports = port::get_ports().unwrap();
+
+}
+#[tauri::command(rename_all = "snake_case")]
+fn get_status(app: AppHandle, port_name:&str) {
     let mut sys = System::new_with_specifics(
         RefreshKind::nothing()
             .with_cpu(CpuRefreshKind::everything())
@@ -55,7 +60,7 @@ fn get_status(app: AppHandle) {
     );
     thread::sleep(sysinfo::MINIMUM_CPU_UPDATE_INTERVAL);
     tauri::async_runtime::spawn(async move {
-        let mut port = serialport::new("COM3", 9600)
+        let mut port = serialport::new(port_name, 9600)
             .timeout(Duration::from_millis(10))
             .open();
         loop{
