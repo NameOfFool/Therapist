@@ -1,0 +1,16 @@
+@use '../../vars';
+
+.container{
+  background-color: vars.$light-color-bg;
+  color: vars.$light-color-text;
+  display:flex;
+  justify-content: space-between;
+  text-align: center;
+  gap: vars.$spacing-lg;
+  &__bar{
+    flex:10;
+  }
+  &__percent{
+    flex:1;
+  }
+}
