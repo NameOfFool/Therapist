@@ -9,13 +9,7 @@ use tauri::{
 pub fn create_tray<R: Runtime>(app: &tauri::AppHandle<R>) -> tauri::Result<()> {
     let open_window_i = MenuItem::with_id(app, "open-window", "Open window", true, None::<&str>)?;
     let quit_i = MenuItem::with_id(app, "quit", "Quit", true, None::<&str>)?;
-    let menu1 = Menu::with_items(
-        app,
-        &[
-            &open_window_i,
-            &quit_i,
-        ],
-    )?;
+    let menu1 = Menu::with_items(app, &[&open_window_i, &quit_i])?;
     let _ = TrayIconBuilder::with_id("tray-1")
         .tooltip("Tauri")
         .icon(app.default_window_icon().unwrap().clone())
@@ -26,11 +20,14 @@ pub fn create_tray<R: Runtime>(app: &tauri::AppHandle<R>) -> tauri::Result<()> {
                 app.exit(0);
             }
             "open-window" => {
-                let _webview =
-                    tauri::WebviewWindowBuilder::new(app, "main", WebviewUrl::App("index.html".into()))
-                        .title("Therapits")
-                        .build()
-                        .unwrap();
+                let _webview = tauri::WebviewWindowBuilder::new(
+                    app,
+                    "main",
+                    WebviewUrl::App("index.html".into()),
+                )
+                .title("Therapits")
+                .build()
+                .unwrap();
             }
             _ => {}
         })

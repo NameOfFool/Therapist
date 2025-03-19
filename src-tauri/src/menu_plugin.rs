@@ -25,8 +25,7 @@ pub fn toggle<R: tauri::Runtime>(
     if let Some(menu) = app.remove_menu().unwrap() {
         app_menu.0.lock().unwrap().replace(menu);
     } else {
-        app
-            .set_menu(app_menu.0.lock().unwrap().clone().expect("no app menu"))
+        app.set_menu(app_menu.0.lock().unwrap().clone().expect("no app menu"))
             .unwrap();
     }
 }

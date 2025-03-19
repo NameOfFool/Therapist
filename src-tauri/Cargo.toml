@@ -27,3 +27,4 @@ sysinfo = "0.33.1"
 machine-info = "1.0.9"
 libmath = "0.2.1"
 tokio = { version = "1.44.0", features = ["time"] }
+tauri-plugin-store = "2"

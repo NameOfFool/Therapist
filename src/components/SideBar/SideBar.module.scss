@@ -1,0 +1,15 @@
+@use '../../vars';
+
+.container{
+  flex-grow: 0;
+  display: flex;
+  flex-flow: column nowrap;
+  gap: vars.$spacing-md;
+  &__link{
+    text-decoration: none;
+    color: vars.$light-color-text;
+    font-size: 18px;
+    font-family: Rubik, serif;
+    font-weight: bold;
+  }
+}

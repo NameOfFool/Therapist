@@ -4,12 +4,11 @@
   margin: 0 vars.$spacing-lg;
   display:flex;
   font-family: 'Rubik';
-  flex-direction: column;
-
-  &__stats{
-    display: flex;
-    flex-direction: column;
-    gap: vars.$spacing-md;
+  flex-flow: row nowrap;
+  gap: vars.$spacing-lg;
+  margin-top: vars.$spacing-lg;
+  &__main{
+    flex:3;
   }
 }
 @font-face {
