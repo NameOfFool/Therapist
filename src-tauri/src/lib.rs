@@ -25,7 +25,7 @@ pub fn run() {
             Ok(())
         })
         .plugin(tauri_plugin_opener::init())
-        .invoke_handler(tauri::generate_handler![get_status])
+        .invoke_handler(tauri::generate_handler![get_status, get_available_ports])
         .build(tauri::generate_context!())
         .expect("error while running tauri application")
         .run(move |_app_handle, _event| {
@@ -48,8 +48,8 @@ struct SystemStatus {
     ram_total: u64,
 }
 #[tauri::command(rename_all = "snake_case")]
-fn get_available_ports() {
-    let ports = port::get_ports().unwrap();
+fn get_available_ports() ->Vec<String> {
+    port::get_ports().unwrap()
 }
 #[tauri::command(rename_all = "snake_case")]
 fn get_status(app: AppHandle, port_name: String) {

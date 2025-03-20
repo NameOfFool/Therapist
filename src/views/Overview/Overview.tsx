@@ -1,4 +1,4 @@
-import styles from "../../App.module.scss";
+import styles from "./Overview.module.scss";
 import Status from "../../components/Status/Status.tsx";
 import {ApexOptions} from "apexcharts";
 import ApexCharts from "apexcharts";

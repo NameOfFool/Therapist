@@ -1,0 +1,13 @@
+@use '../../vars';
+
+.container{
+  margin: 0 vars.$spacing-lg;
+  display:flex;
+  font-family: 'Rubik';
+  flex-direction: column;
+  width:100%;
+
+  &__ports{
+    border-color: vars.$dark-color-secondary;
+  }
+}
