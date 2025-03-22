@@ -10,4 +10,22 @@
   &__ports{
     border-color: vars.$dark-color-secondary;
   }
+  &__form{
+    display: flex;
+    flex-flow: column nowrap;
+    width: 50%;
+    gap: vars.$spacing-md;
+  }
+  &__button{
+    background-color: vars.$light-color-primary;
+    color: vars.$light-color-bg;
+    font-family: 'Rubik';
+    border-radius: 25px;
+    font-size: 18px;
+    transition: all 0.4s ease 0s !important;
+    &:hover{
+      background-color: vars.$light-color-secondary;
+      transform: scale(1.1);
+    }
+  }
 }
